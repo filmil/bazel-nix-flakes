@@ -9,14 +9,19 @@ http_archive(
     ],
 )
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+
 ######################
 # Tweag Nix Support
 ######################
 
 # Replace with http_archive: https://github.com/tweag/rules_nixpkgs/#setup
-local_repository(
+http_archive(
     name = "io_tweag_rules_nixpkgs",
-    path = "../../",
+    strip_prefix = "rules_nixpkgs-126e9f66b833337be2c35103ce46ab66b4e44799",
+    urls = ["https://github.com/tweag/rules_nixpkgs/archive/126e9f66b833337be2c35103ce46ab66b4e44799.tar.gz"],
+    sha256 = "480df4a7777a5e3ee7a755ab38d18ecb3ddb7b2e2435f24ad2037c1b084faa65",
 )
 
 load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")

@@ -8,8 +8,7 @@
 # https://stackoverflow.com/questions/59895
 readonly _script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-readonly _output_base="$(${BAZEL_REAL} info output_base)"
-readonly _output_user_root="${_output_base}/.."
+readonly _output_user_root="${HOME}/.cache/bazel/_bazel_${USER}"
 
 # TODO: filmil - This does not support multiple architectures.
 readonly _install_nix="${_script_dir}/install_nix.sh"

@@ -51,7 +51,12 @@ fi
 # TODO: fmil - This displaces the bazel cache, which is not expected. I would
 # prefer that it does not. XDG_CACHE_HOME is not honored by bazel until 7.2.0
 # :(
-readonly _cmdline="${BAZEL_REAL} ${@}"
+readonly _cmdline="\
+    if [[ -d /nix/store ]]; then \
+      ${BAZEL_REAL} ${@}; \
+    else 
+        echo /nix/store not present ; \
+    fi"
 
 env XDG_STATE_HOME="${_nix_user}" \
     "${_chroot}" "${_nix_dir}" \

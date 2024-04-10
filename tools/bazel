@@ -8,6 +8,8 @@
 # https://stackoverflow.com/questions/59895
 readonly _script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+readonly _this_script="${0}"
+
 # TODO: filmil - This does not support multiple architectures.
 readonly _install_nix="${_script_dir}/install_nix.sh"
 readonly _chroot="${_script_dir}/nix-user-chroot"
@@ -17,7 +19,11 @@ readonly _nix_install="${_output_user_root}/nix_install"
 readonly _nix_dir="${_nix_install}/nix"
 readonly _nix_user="${_nix_install}/user"
 
-if [[ ! -f "${_nix_install}/created" ]]; then
+readonly _sha256="$(sha256sum ${_this_script})"
+
+readonly _install_filename="${_nix_install}/created"
+
+function install_nix {
     # Not installed, go install it.
     mkdir -p "${_nix_install}"
     mkdir -p "${_nix_dir}"
@@ -26,7 +32,17 @@ if [[ ! -f "${_nix_install}/created" ]]; then
         env \
         XDG_STATE_HOME="${_nix_user}" \
         "${_install_nix}"
-    touch "${_nix_install}/created"
+    echo "${_sha256}" > "${_install_filename}"
+}
+
+
+if [[ ! -f "${_install_filename}" ]]; then
+    install_nix
+else
+    readonly _saved_sha256="$(cat ${_install_filename})"
+    if [[ "${_saved_sha256}" != "${_sha256}" ]]; then
+        install_nix
+    fi
 fi
 
 # TODO: fmil - This displaces the bazel cache, which is not expected. I would

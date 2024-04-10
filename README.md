@@ -1,12 +1,20 @@
-# Fully hermetic bazel build with nix, without /nix/store
+# Fully hermetic bazel build with nix, without `/nix/store` [![Test status](https://github.com/filmil/bazel-nix-flakes/workflows/Test/badge.svg)](https://github.com/filmil/bazel-nix-flakes/workflows/Test/badge.svg)
 
-This is an experiment in fully hermetic, but also self-installing nix based
+An experiment in fully hermetic, but also self-installing [nix][nx] based
 hermetic bazel build.
 
+[nx]: https://nixos.org
+
 The build rules at https://github.com/tweag/rules_nixpkgs allow bazel to bring
-in dependencies from nixpkgs. But, it requires having a `/nix/store` on your
-machine, which in turn means you need to have a pre-existing system-wide nix
-installation.
+in dependencies from [nixpkgs][nxp]. But, it requires having a `/nix/store` on
+your machine, which in turn means you need to have a pre-existing system-wide
+nix installation.
+
+[nxp]: https://github.com/NixOS/nixpkgs
+
+This repository goes one step further: `bazel` will instantiate a bazel-specific
+nix store and pull in the appropriate dependencies from nixpkgs. This means that
+you will not need to install nix in order to use the packages from nixpkgs.
 
 This example repo adds the dir `//tools` to an existing `rules_nixpkgs`
 example, which makes a stand-alone and ephemeral nix installation in your bazel
@@ -18,14 +26,8 @@ world app.
 
 # Bugs
 
-* The bazel daemon stops after a few seconds after a run. This means that every
-  time you rebuild, bazel re-reads all deps. This is not OK. The daemon should
-  sit around for a long time instead.
-
-* Sometimes bazel gets confused and crashes if invoked in short succession.
-
-* The built binaries depend on a non-existent /nix/store dir. But I think there
-  is a solution to that.
+* The built binaries depend on a non-existent `/nix/store` dir. But I think that
+https://github.com/tweag/clodl may help that.
 
 ---
 

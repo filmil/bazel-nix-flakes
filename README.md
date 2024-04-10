@@ -24,14 +24,6 @@ world app.
 1. install bazelisk, name it `bazel`
 2. try: `bazel run :hello`
 
-# Bugs
-
-* The built binaries depend on a non-existent `/nix/store` dir. But I think that
-https://github.com/tweag/clodl may help that.
-
-* Does not work under Github Actions, or `act`. It is probably hostile to
-  execution in containers.
-
 ---
 
 Original README.md below.

@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# This still needs debugging.
+set -x
+
 # A wrapper script for bazel or bazelisk, which sets up the build environment
 # to work with a local hermetic installation of nix.
 # Started by bazel/bazelisk instead of ${BAZEL_REAL}

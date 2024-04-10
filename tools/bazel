@@ -8,12 +8,11 @@
 # https://stackoverflow.com/questions/59895
 readonly _script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-readonly _output_user_root="${HOME}/.cache/bazel/_bazel_${USER}"
-
 # TODO: filmil - This does not support multiple architectures.
 readonly _install_nix="${_script_dir}/install_nix.sh"
 readonly _chroot="${_script_dir}/nix-user-chroot"
 
+readonly _output_user_root="${HOME}/.cache/bazel/_bazel_${USER}"
 readonly _nix_install="${_output_user_root}/nix_install"
 readonly _nix_dir="${_nix_install}/nix"
 readonly _nix_user="${_nix_install}/user"
@@ -25,8 +24,7 @@ if [[ ! -f "${_nix_install}/created" ]]; then
     mkdir -p "${_nix_user}"
     "${_chroot}" "${_nix_dir}" \
         env \
-        HOME="${_nix_user}" \
-        XDG_STATE_HOME="${_nix_user}/.local/state" \
+        XDG_STATE_HOME="${_nix_user}" \
         "${_install_nix}"
     touch "${_nix_install}/created"
 fi
@@ -34,11 +32,9 @@ fi
 # TODO: fmil - This displaces the bazel cache, which is not expected. I would
 # prefer that it does not. XDG_CACHE_HOME is not honored by bazel until 7.2.0
 # :(
-readonly _cmdline="source ${_nix_user}/.nix-profile/etc/profile.d/nix.sh \
-    && ${BAZEL_REAL} --output_user_root=${_output_user_root} ${@}"
+readonly _cmdline="${BAZEL_REAL} ${@}"
 
-"${_chroot}" "${_nix_dir}" \
-    env \
-    HOME="${_nix_user}" \
-    "${_nix_user}/.nix-profile/bin/nix-shell" --run "${_cmdline}"
+env XDG_STATE_HOME="${_nix_user}" \
+    "${_chroot}" "${_nix_dir}" \
+    "${_nix_user}/nix/profiles/profile/bin/nix-shell" --run "${_cmdline}"
 

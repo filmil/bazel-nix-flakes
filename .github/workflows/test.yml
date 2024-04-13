@@ -20,6 +20,8 @@ jobs:
           version: 5.4.0
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodules: 'true'
       - name: Build
         run: "bazel build //..."
       - name: Test

@@ -24,6 +24,9 @@ world app.
 1. install bazelisk, name it `bazel`
 2. try: `bazel run :hello`
 
+The actual reusable set of bazel local nix rules is at: 
+https://github.com/filmil/bazel_local_nix.
+
 ---
 
 Original README.md below.
